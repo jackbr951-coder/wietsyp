@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+segno
+pillow
+httpx
+python-dotenv
+python-multipart
+pytest
+# --- optional, FREE: local speech-to-text (voice recording), ~150 MB-1.5 GB model download on first use
+# faster-whisper
+# --- optional, FREE: spoken replies in Tunisian Arabic (needs internet, light on the laptop)
+edge-tts
+# --- optional, FREE: offline speech when a Windows Arabic SAPI voice is installed
+# pyttsx3
+# --- optional, PAID (not needed): anthropic, openai

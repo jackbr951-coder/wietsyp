@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3b9a6">
+<title></title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23a64e32'/%3E%3Cpath d='M17 46V18h8l7 12 7-12h8v28h-8V31l-7 11-7-11v15z' fill='%23fff1dc'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--ink:#3b2230;--muted:#6e4c58;--paper:#fbeee3;--card:rgba(255,248,243,.9);--line:rgba(123,61,90,.18);--gold:#e9a53b;--gold-dark:#b4702a;--terracotta:#b5533c;--rose:#c9566f;--rose-soft:#f6d9d6;--plum:#7b3d5a;--olive:#5f7a3e;--danger:#a3322b;--success:#3f6a35;--shadow:0 14px 40px rgba(123,61,90,.16);--dock-height:106px;--kb-offset:0px;font-family:'Tajawal',system-ui,-apple-system,'Segoe UI',sans-serif}
+:root[data-theme=dark]{color-scheme:dark;--ink:#fcefe6;--muted:#e3c3c8;--paper:#2b1d33;--card:rgba(48,30,52,.88);--line:rgba(246,217,214,.2);--gold:#f0b350;--gold-dark:#a8652a;--terracotta:#e0896a;--rose:#e58397;--rose-soft:#5a2f45;--plum:#b56a8b;--olive:#b7c98c;--danger:#ffaa9a;--success:#b5d39a;--shadow:0 16px 40px rgba(15,8,20,.5)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--ink:#fcefe6;--muted:#e3c3c8;--paper:#2b1d33;--card:rgba(48,30,52,.88);--line:rgba(246,217,214,.2);--gold:#f0b350;--gold-dark:#a8652a;--terracotta:#e0896a;--rose:#e58397;--rose-soft:#5a2f45;--plum:#b56a8b;--olive:#b7c98c;--danger:#ffaa9a;--success:#b5d39a;--shadow:0 16px 40px rgba(15,8,20,.5)}}
+*{box-sizing:border-box}
+html{min-height:100%;scroll-padding-block:20px}
+body{min-width:320px;overflow-x:clip;min-height:100vh;margin:0;padding:env(safe-area-inset-top) 14px calc(var(--dock-height) + env(safe-area-inset-bottom) + 18px);overflow-x:hidden;color:var(--ink);background:var(--paper);font:500 17px/1.55 'Tajawal',system-ui,-apple-system,'Segoe UI',sans-serif}
+button,input,textarea,select{font:inherit}
+button{min-height:44px;border:1px solid var(--line);border-radius:13px;padding:8px 14px;background:var(--card);color:var(--ink);font-weight:700;cursor:pointer;touch-action:manipulation}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #9a5c1f;outline-offset:3px}
+button:disabled{opacity:.55;cursor:not-allowed}
+button:active{transform:translateY(1px)}
+a{color:inherit}
+.farm-scene{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:url("/static/img/bg-light.svg") center bottom/cover no-repeat,#f3b9a6}
+:root[data-theme=dark] .farm-scene{background:url("/static/img/bg-dark.svg") center bottom/cover no-repeat,#2b1d33}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .farm-scene{background:url("/static/img/bg-dark.svg") center bottom/cover no-repeat,#2b1d33}}
+.farm-layer{display:none}
+@media(max-width:480px){.farm-scene{background-position:82% bottom}}
+.farm-layer{position:absolute;inset:-1.5%;background-position:center bottom;background-size:cover;background-repeat:no-repeat;will-change:transform;transform:translate3d(var(--layer-x,0),var(--layer-y,0),0);transition:transform .35s ease-out}
+.layer-sky{inset:-3%;background:linear-gradient(180deg,#db987e 0%,#f2c08d 55%,#f4d29f 100%)}
+.layer-far{inset:20% -2% 12%;background:linear-gradient(180deg,transparent 0 42%,#9c885c 43%,#8d7b50 68%,#82714b 100%);clip-path:polygon(0 61%,8% 52%,17% 48%,27% 56%,36% 43%,48% 54%,58% 39%,69% 50%,81% 35%,92% 49%,100% 41%,100% 100%,0 100%)}
+.layer-mid{inset:43% -2% 5%;background:linear-gradient(170deg,transparent 0 15%,#87905b 16% 28%,#a08a50 29% 42%,#65764a 43% 56%,#937044 57% 100%);clip-path:polygon(0 28%,12% 18%,26% 27%,36% 14%,51% 25%,67% 12%,81% 22%,92% 11%,100% 18%,100% 100%,0 100%)}
+.layer-near{inset:62% -2% 0;background:linear-gradient(170deg,#bc984d 0%,#d6aa52 28%,#b9813d 58%,#875331 100%);clip-path:polygon(0 24%,15% 11%,29% 22%,45% 7%,62% 20%,77% 10%,100% 18%,100% 100%,0 100%)}
+.layer-fore{inset:auto -3% -1%;height:25%;background:linear-gradient(180deg,rgba(114,86,42,0) 0%,#82603c 22%,#684a31 100%);mask-image:linear-gradient(0deg,#000 20%,transparent 100%);transform-origin:bottom}
+.layer-fore:before,.layer-fore:after{position:absolute;inset:auto 0 0;height:85%;content:"";background:repeating-linear-gradient(78deg,transparent 0 14px,rgba(240,198,103,.72) 15px 17px,transparent 18px 34px);mask-image:linear-gradient(0deg,#000 5%,transparent 98%);animation:grass-sway 4.8s ease-in-out infinite alternate}
+.layer-fore:after{transform:scaleX(-1);opacity:.55;animation-delay:-2.1s}
+.cloud{position:absolute;top:15%;left:-22%;width:180px;height:40px;border-radius:60%;background:rgba(255,238,211,.55);filter:blur(8px);animation:cloud-drift 64s linear infinite}
+.cloud:after{position:absolute;left:48px;top:-18px;width:86px;height:54px;border-radius:50%;content:"";background:inherit}
+.cloud-b{top:26%;left:-35%;width:120px;opacity:.65;animation-duration:92s;animation-delay:-36s}
+.sun-haze{position:absolute;inset:0;background:radial-gradient(ellipse at 74% 21%,rgba(255,224,158,.43),transparent 25%);mix-blend-mode:screen}
+.farm-scene[data-period="dawn"] .sun-haze{opacity:.55;filter:hue-rotate(-16deg)}
+.farm-scene[data-period="noon"] .sun-haze{opacity:.35;filter:saturate(.75)}
+.farm-scene[data-period="sunset"] .sun-haze{opacity:1;filter:hue-rotate(15deg) saturate(1.25)}
+.farm-scene[data-period="night"] .sun-haze{opacity:.18;filter:hue-rotate(170deg)}
+.sun-haze:after{position:absolute;top:4%;right:18%;width:45vw;height:35vw;max-width:480px;max-height:300px;content:"";border-radius:50%;background:repeating-conic-gradient(from 2deg at 70% 35%,rgba(255,228,166,.14) 0deg 1deg,transparent 2deg 13deg);filter:blur(5px);animation:ray-breathe 12s ease-in-out infinite alternate}
+.farm-birds{position:absolute;top:28%;left:0;width:100%;height:13%;overflow:hidden;opacity:.7}
+.farm-birds:before,.farm-birds:after{position:absolute;top:24%;left:-10%;width:100%;height:100%;content:"";background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40'%3E%3Cpath d='M4 23q10-14 20 0 10-13 20 0M58 14q8-11 16 0 8-10 16 0M83 31q7-9 14 0 7-8 14 0' fill='none' stroke='%235a4938' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:120px 42px;animation:birds-cross 42s linear infinite}
+.farm-birds:after{top:58%;opacity:.6;animation-duration:58s;animation-delay:-23s;transform:scale(.7)}
+.dust{position:absolute;inset:45% 0 12%;background-image:radial-gradient(circle,rgba(255,228,163,.8) 0 1px,transparent 2px),radial-gradient(circle,rgba(255,246,209,.7) 0 1px,transparent 2px);background-size:190px 150px,270px 230px;background-position:20px 30px,110px 70px;animation:dust-float 22s linear infinite;opacity:.62}
+.farm-shell{position:relative;z-index:2;width:min(100%,850px);margin-inline:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-block:9px}
+.brand{font-size:clamp(2rem,8vw,3rem);font-weight:900;line-height:1;color:#fff6ef;text-shadow:1px 1px 0 #e07f8f,2px 3px 0 #7b3d5a,4px 7px 12px rgba(91,45,68,.4);transform:perspective(500px) rotateX(7deg)}
+.top-controls{display:flex;align-items:center;gap:6px}
+.lang-select{min-height:44px;max-width:110px;border:1px solid var(--line);border-radius:12px;padding:5px 25px 5px 8px;background:var(--card);color:var(--ink)}
+.icon-button{display:grid;place-items:center;width:44px;padding:8px}
+.icon-button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.hero{position:relative;display:flex;min-height:174px;align-items:center;justify-content:center;text-align:center}
+.start-button{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);min-width:min(76vw,310px);min-height:76px;border:2px solid #fff0c8;border-radius:22px;background:linear-gradient(135deg,#7b3d5a,#c9566f 55%,#e07f6a);color:#fff8f2;font-size:1.55rem;font-weight:900;box-shadow:0 12px 34px rgba(67,40,22,.35)}
+.start-button[hidden]{display:none}
+.welcome{margin-top:7px;padding:10px 12px;border:1px solid var(--line);border-radius:15px;background:var(--card);font-size:1rem}
+.welcome p{margin:2px}
+.resume-card{margin-block:10px;padding:15px;border:2px solid #a47743;border-radius:4px 15px 4px 15px;background:repeating-linear-gradient(0deg,#fff3d8,#fff3d8 27px,#ecd9b6 28px);color:#39261d;box-shadow:3px 4px 0 #805a37;font-size:1.1rem}
+.resume-card[hidden]{display:none}
+.resume-card h2{margin:0 0 8px;font-size:1.2rem}
+.resume-line{margin:4px 0}
+.crate-row{display:flex;gap:8px;align-items:end;justify-content:center;min-height:74px;padding:4px}
+.crate{position:relative;display:grid;place-items:center;width:67px;height:53px;border:4px solid #875332;border-top-width:7px;border-radius:4px 4px 7px 7px;background:repeating-linear-gradient(0deg,transparent 0 9px,#875332 10px 13px);font-size:1.25rem}
+.crate:before{position:absolute;inset-inline:0;top:-18px;height:var(--fill,0%);content:"";border-radius:50% 50% 10% 10%;background:radial-gradient(circle at 30% 42%,#ee6c3e 0 7px,transparent 8px),radial-gradient(circle at 62% 35%,#d94c34 0 8px,transparent 9px),radial-gradient(circle at 48% 68%,#f17a40 0 8px,transparent 9px)}
+.hero-copy{max-width:68%;padding-block:12px}
+.hero-copy p{margin:5px 0;color:#5b2d44;font-size:1.1rem;font-weight:700;text-shadow:0 1px 2px rgba(255,244,218,.8)}
+.farmer{position:absolute;left:50%;bottom:-2px;width:clamp(135px,39vw,260px);height:auto;overflow:visible;transform:translateX(-50%)}
+.farmer{cursor:pointer;pointer-events:auto}
+.farmer .head-turn,.farmer .arm-wave,.farmer .hand-ear,.farmer .mouth-talk{transform-box:fill-box;transform-origin:center}
+.farmer .arm-wave{transform-origin:70% 25%}
+.farmer .sound-rings{opacity:0}
+.farmer.state-greeting .arm-wave{animation:wave 1.2s ease-in-out 2}
+.farmer.state-idle .body{animation:breathing 3.7s ease-in-out infinite}
+.farmer.state-idle .head-turn{animation:head-idle 5.2s ease-in-out infinite}
+.farmer.state-idle .blink{transform-origin:center;animation:blink 5s ease-in-out infinite}
+.farmer.state-listening .head-turn{transform:rotate(-8deg) translateX(3px)}
+.farmer.state-listening .hand-ear{opacity:1}
+.farmer.state-listening .arm-wave{transform:translateY(-3px)}
+.farmer.state-thinking .head-turn{transform:rotate(5deg) translateY(-2px)}
+.farmer.state-speaking .mouth-talk{animation:mouth 0.3s ease-in-out infinite alternate}
+.farmer.state-speaking .arm-wave{animation:speak-gesture 1.3s ease-in-out infinite alternate}
+.farmer.state-speaking .sound-rings{opacity:.7;animation:ring-pulse 1.25s ease-out infinite}
+.farmer-state{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.panel{margin-block:12px;padding:16px;border:1px solid var(--line);border-radius:20px;background:var(--card);box-shadow:var(--shadow);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.panel h2{margin:0 0 10px;font-size:1.2rem;line-height:1.35}
+.subtle{margin:0;color:var(--muted);font-size:.97rem}
+.status-line{display:flex;align-items:center;gap:8px;min-height:34px;margin-block:0 8px;color:var(--muted);font-size:.94rem}
+.status-dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--olive)}
+.status-line[data-kind=error] .status-dot{background:var(--danger)}
+.status-line[data-kind=busy] .status-dot{background:var(--gold)}
+.retry-mic{display:none;margin-inline-start:auto;padding:3px 10px;min-height:36px}
+.retry-mic.visible{display:inline-flex;align-items:center}
+.examples{display:flex;gap:7px;overflow:auto;padding-block:0 9px;scrollbar-width:thin}
+.examples button{flex:none;min-height:38px;padding:5px 11px;font-size:.88rem}
+.chat{display:flex;max-height:min(38vh,340px);min-height:70px;flex-direction:column;gap:8px;overflow:auto;padding:4px 2px 10px;overscroll-behavior:contain}
+.bubble{max-width:min(86%,620px);padding:10px 14px;border:1px solid var(--line);border-radius:18px;overflow-wrap:anywhere;white-space:pre-wrap}
+.bubble.user{align-self:flex-start;border-end-start-radius:5px;background:var(--plum);color:#fff6f2}
+.bubble.bot{align-self:flex-end;border-end-end-radius:5px;background:#fbe4dc;color:#3b2230}
+:root[data-theme=dark] .bubble.bot{background:#5a2f45;color:#fcefe6}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .bubble.bot{background:#5a2f45;color:#fcefe6}}
+.bubble .caption{display:block;min-height:1.4em}
+.bubble.pending .caption:after{content:"";display:inline-block;width:2px;height:1em;margin-inline-start:2px;vertical-align:-.12em;background:currentColor;animation:caption-caret .8s steps(2) infinite}
+.question-line{margin:0;color:var(--muted);font-size:.95rem}
+.composer-dock{position:fixed;z-index:10;inset-inline:0;bottom:calc(env(safe-area-inset-bottom) + var(--kb-offset));display:grid;direction:ltr;grid-template-columns:minmax(0,1fr) 68px minmax(0,1fr);align-items:center;gap:9px;width:min(100%,850px);margin-inline:auto;padding:10px max(14px,env(safe-area-inset-right)) 10px max(14px,env(safe-area-inset-left));border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0;background:var(--card);box-shadow:0 -8px 28px rgba(64,39,22,.13);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.composer-dock textarea{grid-column:1;grid-row:1;width:100%;min-height:52px;max-height:120px;resize:vertical;border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:rgba(255,255,255,.7);color:var(--ink);font-size:16px;line-height:1.45;text-align:start}
+:root[data-theme=dark] .composer-dock textarea{background:rgba(255,255,255,.08)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .composer-dock textarea{background:rgba(255,255,255,.08)}}
+:root[dir=rtl] .composer-dock textarea{direction:rtl}
+:root[dir=ltr] .composer-dock textarea{direction:ltr}
+.mic-button{grid-column:2;grid-row:1;display:grid;place-items:center;width:64px;height:64px;min-height:64px;border:0;border-radius:50%;background:linear-gradient(140deg,#c9566f,#b5533c);color:#fff8f2;box-shadow:0 4px 0 #7b3d5a,0 8px 18px rgba(123,61,90,.28)}
+.mic-button svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mic-button.is-active{background:#7b3d5a;box-shadow:0 0 0 6px rgba(201,86,111,.28);animation:mic-pulse 1.4s ease-out infinite}
+@keyframes mic-pulse{0%{box-shadow:0 0 0 0 rgba(201,86,111,.55)}100%{box-shadow:0 0 0 16px rgba(201,86,111,0)}}
+.send-button{grid-column:3;grid-row:1;justify-self:end;padding-inline:12px;background:var(--gold);color:#352318}
+.photo-picker{display:grid;place-items:center;min-height:44px;padding:8px 13px;border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--ink);font-weight:700;cursor:pointer}
+.photo-name{max-width:100%;overflow-wrap:anywhere;color:var(--muted);font-size:.9rem}
+.voice-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.voice-controls .toggle-label{min-width:0;max-width:100%}
+#voice-picker{max-width:min(52vw,260px);text-overflow:ellipsis}
+.voice-controls select{max-width:100%;min-height:40px;border:1px solid var(--line);border-radius:11px;padding:4px 8px;background:var(--card);color:var(--ink)}
+.stt-lang{padding:2px 4px 2px 10px;border-radius:13px;background:var(--rose-soft)}
+.voice-controls button{min-height:42px}
+.toggle-label{display:inline-flex;align-items:center;gap:7px;min-height:44px}
+.toggle-label input{width:20px;height:20px;accent-color:var(--terracotta)}
+.speed-control{display:flex;align-items:center;gap:7px;min-height:44px}
+.speed-control input{width:92px;accent-color:var(--terracotta);direction:ltr}
+.speed-control output{min-width:36px;font-variant-numeric:tabular-nums}
+.field-list{display:grid;grid-template-columns:minmax(0,1fr);margin:0}
+.field-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:10px;padding-block:8px;border-bottom:1px solid var(--line)}
+.field-row dt{color:var(--muted);overflow-wrap:anywhere}
+.field-row dd{margin:0;text-align:end;font-weight:700;overflow-wrap:anywhere;white-space:pre-wrap}
+.price-box{margin-block-start:13px;padding:12px 14px;border-radius:15px;background:var(--plum);color:#fff4ef}
+.price-amount{display:block;color:#ffdd91;font-size:2rem;font-weight:900;line-height:1.2}
+.price-note{display:block;margin-block-start:3px}
+.photo-row,.cert-actions,.link-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.photo-row{margin-block:10px}
+.photo-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.primary{background:var(--gold);color:#352318}
+.issue-button{width:100%;margin-block-start:9px}
+.certificate{display:none;margin-block-start:14px}
+.certificate.visible{display:block}
+.flip{perspective:1100px}
+.flip-inner{position:relative;min-height:142px;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.2,.8,.2,1)}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.cert-face{position:absolute;inset:0;display:grid;align-content:center;justify-items:center;gap:5px;padding:16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#fff1d2,#e6bb7c);color:#39261d;text-align:center;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.cert-back{transform:rotateY(180deg);background:linear-gradient(145deg,#f2d5a5,#ca8b50)}
+.cert-icon{font-size:1.8rem;line-height:1}
+.cert-summary{margin:0;font-weight:800}
+.qr-section{display:grid;justify-items:center;gap:8px;margin-block:12px;padding:14px;border:1px solid var(--line);border-radius:17px;background:var(--card);text-align:center}
+.qr-image{display:grid;place-items:center;width:clamp(252px,70vw,300px);height:clamp(252px,70vw,300px);padding:16px;border-radius:10px;background:#fff;box-shadow:0 1px 5px rgba(0,0,0,.18)}
+.qr-image img{display:block;width:100%;height:100%;object-fit:contain}
+.certificate-link{max-width:100%;overflow-wrap:anywhere;direction:ltr;text-align:center;font-size:.92rem}
+.local-warning{display:none;max-width:40rem;margin:0;color:var(--danger);font-weight:700}
+.local-warning.visible{display:block}
+.link-actions{justify-content:center}
+.link-actions button{min-width:88px}
+.status-area{min-height:1.6em;margin-block:7px 0;color:var(--muted);font-size:.92rem}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+:root[data-theme=dark] .layer-sky{background:linear-gradient(180deg,#51343b 0%,#8d5747 47%,#bd8150 100%)}
+:root[data-theme=dark] .layer-far{filter:brightness(.63) sepia(.25)}
+:root[data-theme=dark] .layer-mid{filter:brightness(.67) sepia(.22)}
+:root[data-theme=dark] .layer-near{filter:brightness(.7) sepia(.2)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .layer-sky{background:linear-gradient(180deg,#51343b 0%,#8d5747 47%,#bd8150 100%)}:root:not([data-theme=light]) .layer-far{filter:brightness(.63) sepia(.25)}:root:not([data-theme=light]) .layer-mid{filter:brightness(.67) sepia(.22)}:root:not([data-theme=light]) .layer-near{filter:brightness(.7) sepia(.2)}}
+@media(min-width:700px){body{padding-block-start:12px}.hero{min-height:205px}.panel{padding:20px}.chat{max-height:330px}.composer-dock{border-radius:18px 18px 0 0}}
+@media(max-width:480px){body{padding-inline:10px}.topbar{padding-block:6px}.hero{min-height:210px}.hero-copy{max-width:66%;align-self:flex-start}.hero-copy p{font-size:.95rem}.farmer{width:clamp(175px,55vw,230px)}.panel{padding:13px;border-radius:17px}.panel h2{font-size:1.08rem}.chat{max-height:34vh}.bubble{max-width:90%;font-size:1rem}.composer-dock{grid-template-columns:minmax(0,1fr) 66px minmax(0,1fr);gap:6px;padding-inline:9px}.mic-button{width:62px;height:62px;min-height:62px}.send-button{min-width:46px;padding-inline:7px}.voice-controls{gap:5px}.speed-control input{width:75px}}
+@keyframes grass-sway{from{transform:skewX(-1deg) scaleX(1)}to{transform:skewX(2deg) scaleX(1.015)}}
+@keyframes cloud-drift{from{transform:translateX(0)}to{transform:translateX(145vw)}}
+@keyframes ray-breathe{from{opacity:.38;transform:rotate(-2deg)}to{opacity:.78;transform:rotate(3deg)}}
+@keyframes birds-cross{from{transform:translateX(0)}to{transform:translateX(120vw)}}
+@keyframes dust-float{from{background-position:20px 30px,110px 70px}to{background-position:150px -40px,0 120px}}
+@keyframes wave{0%,100%{transform:rotate(0)}35%,70%{transform:rotate(-28deg)}55%{transform:rotate(-8deg)}}
+@keyframes breathing{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes head-idle{0%,100%{transform:rotate(0)}50%{transform:rotate(2deg)}}
+@keyframes blink{0%,46%,51%,100%{transform:scaleY(1)}48%,49%{transform:scaleY(.08)}}
+@keyframes speak-gesture{from{transform:rotate(0)}to{transform:rotate(-8deg)}}
+@keyframes mouth{from{transform:scaleY(.75)}to{transform:scaleY(1.15)}}
+@keyframes ring-pulse{0%{transform:scale(.82);opacity:.8}100%{transform:scale(1.16);opacity:0}}
+@keyframes caption-caret{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.farm-layer{will-change:auto}.bubble.pending .caption:after{display:none}}
+body.paused *,body.paused *::before,body.paused *::after{animation-play-state:paused!important}
+@media(max-width:560px){
+ .hero{flex-direction:column;justify-content:flex-start;min-height:300px}
+ .hero-copy{max-width:100%;align-self:center;padding-block:2px 0;text-align:center}
+ .hero-copy p{display:inline-block;padding:4px 12px;border-radius:999px;background:rgba(255,248,243,.78);font-size:.92rem}
+ .farmer{width:clamp(170px,50vw,215px)}
+ .composer-dock{grid-template-columns:minmax(0,1fr) 60px auto;gap:8px;padding-inline:10px}
+ .composer-dock textarea{min-height:48px}
+ .mic-button{width:58px;height:58px;min-height:58px}
+ .send-button{padding-inline:14px}
+ .voice-controls{gap:6px}
+ .chat{max-height:46vh}
+}
+:root[data-theme=dark] .hero-copy p{background:rgba(48,30,52,.78);color:#fcefe6;text-shadow:none}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .hero-copy p{background:rgba(48,30,52,.78);color:#fcefe6;text-shadow:none}}
+</style>
+</head>
+<body>
+<div class="farm-scene" aria-hidden="true">
+ <div class="farm-layer layer-sky" data-layer="sky"><span class="sun-haze"></span><span class="cloud"></span><span class="cloud cloud-b"></span><span class="farm-birds"></span></div>
+ <div class="farm-layer layer-far" data-layer="far"></div>
+ <div class="farm-layer layer-mid" data-layer="mid"></div>
+ <div class="farm-layer layer-near" data-layer="near"></div>
+ <div class="farm-layer layer-fore" data-layer="fore"></div>
+ <div class="dust"></div>
+</div>
+<main class="farm-shell">
+ <header class="topbar">
+  <div class="brand" id="brand"></div>
+  <div class="top-controls">
+   <label class="sr-only" id="language-label" for="language"></label>
+   <select class="lang-select" id="language" aria-labelledby="language-label">
+    <option value="ar">AR</option><option value="fr">FR</option><option value="en">EN</option>
+   </select>
+   <button class="icon-button" id="theme-toggle" type="button" aria-label="">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.2A8.4 8.4 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"></path></svg>
+   </button>
+  </div>
+ </header>
+ <section class="hero" aria-labelledby="brand">
+  <div class="hero-copy"><h1 class="sr-only" id="hero-heading"></h1><p id="tagline"></p></div>
+  <button class="start-button" id="start-button" type="button" lang="ar">اضغط باش نبداو</button>
+  <svg class="farmer state-greeting" id="farmer" viewBox="0 0 180 230" role="img" aria-hidden="true">
+   <g class="sound-rings" fill="none" stroke="#f4cb70" stroke-width="3"><path d="M128 79q20 16 0 32"/><path d="M139 69q31 25 0 52"/></g>
+   <g class="body">
+    <path d="M48 143q7-24 34-28h29q27 8 34 33l8 49H39z" fill="#6a754c"/>
+    <path d="M60 155q13 6 24 0v42H54z" fill="#8d5137"/>
+    <path d="M94 144q14 1 24 12l18 25-11 8-25-19z" fill="#bd7745"/>
+    <path d="M60 196h76l10 14H47z" fill="#5a472e"/>
+    <g class="arm-wave"><path d="M126 148q16-10 24-29l8-26 10 4-5 34q-3 20-26 34z" fill="#6a754c"/><path d="M153 98q-6-12-2-22l6-11q4-5 7 0l-2 8q6-8 9-5 2 2-3 10 5-6 8-2 1 3-5 10 4-4 7 0 1 3-7 11l-8 7z" fill="#bd805e"/></g>
+    <g class="hand-ear" opacity="0"><path d="M55 132q-15-6-17-21l-1-20q1-6 5-3l4 14q-1-15 4-13l4 16q0-12 5-10l2 15q6 8 9 15z" fill="#bd805e"/></g>
+    <path d="M34 166h23v38H34q-8-16 0-38" fill="#aa713c"/>
+    <path d="M29 166h31v7H29zm3 14h25m-24 10h24" stroke="#f1ce7c" stroke-width="2"/>
+    <circle cx="39" cy="174" r="3" fill="#526441"/><circle cx="49" cy="185" r="3" fill="#526441"/><circle cx="38" cy="195" r="3" fill="#526441"/>
+   </g>
+   <g class="head-turn">
+    <path d="M53 77q-4-44 34-49 39 5 38 47v35H53z" fill="#8f4c35"/>
+    <path d="M50 72q3-42 38-42 32 0 38 39-12-10-25-10-18 17-49 13z" fill="#d39a51"/>
+    <ellipse cx="88" cy="84" rx="29" ry="34" fill="#bd805e"/>
+    <path d="M59 76q12-8 24-14 17 10 34 7l5 14q0-37-30-43-32 5-33 36" fill="#d39a51"/>
+    <path d="M72 84q5-4 10 0m14 0q5-4 10 0" fill="none" stroke="#4b352a" stroke-width="2" stroke-linecap="round"/>
+    <path d="M86 96q3 3 6 0" fill="none" stroke="#80513d" stroke-width="2" stroke-linecap="round"/>
+    <path d="M80 105q8 6 16 0" fill="none" stroke="#7b3b32" stroke-width="2" stroke-linecap="round"/>
+    <path d="M72 84q5-9 10 0m14 0q5-9 10 0" fill="#bd805e" class="blink"/>
+    <ellipse class="mouth-talk" cx="88" cy="105" rx="4" ry="1.5" fill="#6e342c"/>
+   </g>
+  </svg>
+  <span class="farmer-state" id="farmer-state" aria-live="polite"></span>
+ </section>
+ <section class="welcome" id="welcome" lang="ar" dir="rtl">
+  <p dir="ltr">3aslema w marhbe bikom fi Dafter, Dafter bch y3awnkom tbi3ou sel3etkom bessoum li thebou alih.</p>
+  <p>عسلامة و مرحبا بيكم في دفتر، دفتر باش يعاونكم تبيعو سلعتكم بالسوم اللي تحبو عليه.</p>
+ </section>
+ <section class="panel" aria-labelledby="conversation-title">
+  <h2 id="conversation-title"></h2>
+  <div class="status-line" id="backend-status" role="status" aria-live="polite"><span class="status-dot" aria-hidden="true"></span><span id="backend-status-text"></span><button class="retry-mic" id="retry-mic" type="button"></button></div>
+  <div class="examples" id="examples" aria-label=""></div>
+  <div class="chat" id="chat" aria-live="polite" aria-relevant="additions text"></div>
+  <p class="question-line" id="question-line"></p>
+  <div class="voice-controls">
+   <label class="toggle-label stt-lang"><span id="stt-lang-label">لغة الكلام</span><select id="stt-lang" aria-label="لغة الكلام">
+    <option value="auto">تلقائي</option><option value="ar-TN">تونسي / العربية</option><option value="fr-FR">Français</option><option value="en-US">English</option>
+   </select></label>
+   <label class="toggle-label"><input id="voice-toggle" type="checkbox" checked><span id="voice-toggle-label"></span></label>
+   <label class="toggle-label"><span>اختيار الصوت</span><select id="voice-picker" aria-label="اختيار الصوت"><option value="">تلقائي</option></select></label>
+   <label class="toggle-label"><input id="conversation-toggle" type="checkbox"><span id="conversation-toggle-label"></span></label>
+   <button id="stop-speaking" type="button"></button>
+   <label class="speed-control"><span id="speed-label"></span><input id="speed" type="range" min="0.8" max="1.2" step="0.1" value="1"><output id="speed-value" for="speed">1.0x</output></label>
+   <button id="test-voice" type="button"></button>
+  </div>
+  <p class="status-area" id="status-area" role="status" aria-live="polite"></p>
+ </section>
+ <section class="panel" aria-labelledby="summary-title">
+  <article class="resume-card" id="resume-card" hidden>
+   <h2>ملخص ما فهمه المساعد</h2>
+   <div id="resume-fields"></div>
+   <div class="crate-row" id="crates" aria-hidden="true"></div>
+  </article>
+  <h2 id="summary-title"></h2>
+  <dl class="field-list" id="fields"></dl>
+  <div class="price-box" id="price-box" hidden><span class="price-amount" id="price-amount"></span><span class="price-note" id="price-note"></span></div>
+ </section>
+ <section class="panel" aria-labelledby="work-title">
+  <h2 id="work-title"></h2>
+  <p class="subtle" id="work-note"></p>
+  <div class="photo-row">
+   <label class="photo-picker" id="photo-picker" for="photo"><span id="photo-button-label"></span></label>
+   <input class="photo-input" type="file" id="photo" accept="image/*" capture="environment">
+   <label class="photo-picker" for="gallery-photo">اختيار من المعرض</label>
+   <input class="photo-input" type="file" id="gallery-photo" accept="image/*">
+   <span class="photo-name" id="photo-name"></span>
+  </div>
+  <button class="primary issue-button" id="issue" type="button" disabled></button>
+  <div class="certificate" id="certificate">
+   <div class="flip" id="flip">
+    <div class="flip-inner">
+     <div class="cert-face cert-front"><span class="cert-icon" aria-hidden="true">✦</span><strong id="cert-front-title"></strong><p class="cert-summary" id="cert-summary"></p></div>
+     <div class="cert-face cert-back"><span class="cert-icon" aria-hidden="true">✓</span><strong id="cert-back-title"></strong><p class="cert-summary" id="cert-back-note"></p></div>
+    </div>
+   </div>
+   <div class="cert-actions"><button class="alt" id="flip-button" type="button"></button><button class="alt" id="tamper" type="button"></button></div>
+   <section class="qr-section" aria-labelledby="qr-title">
+    <h3 id="qr-title"></h3>
+    <div class="qr-image" id="qr"><span class="subtle" id="qr-placeholder"></span></div>
+    <a class="certificate-link" id="certificate-link" target="_blank" rel="noopener noreferrer"></a>
+    <p class="local-warning" id="local-warning"></p>
+    <div class="link-actions"><button class="alt" id="copy-link" type="button"></button><button class="alt" id="share-link" type="button"></button><button class="alt" id="open-link" type="button"></button><button class="alt" id="download-qr" type="button"></button></div>
+   </section>
+  </div>
+ </section>
+</main>
+<div class="composer-dock" id="composer-dock">
+ <textarea id="message" rows="1" autocomplete="off"></textarea>
+ <button class="mic-button" id="mic" type="button" aria-label="">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"></rect><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5m-4 0h8"></path></svg>
+ </button>
+ <button class="send-button" id="send" type="button"></button>
+</div>
+<script>
+const i18n={
+ ar:{
+  brand:'دفتر',tagline:'مساعدتكِ في المزرعة، من الحقل إلى السوق.',language:'اللغة',theme:'تغيير المظهر',
+  conversationTitle:'احكي لي عن محصولكِ أو منتجكِ',statusConnecting:'جارٍ الاتصال بالمساعد…',statusOffline:'الخادم غير متاح؛ يمكنكِ المحاولة مجددًا.',
+  statusReady:'المساعد جاهز',statusListening:'أستمع إليكِ الآن… اضغطي لإيقاف التسجيل.',statusPermission:'لم تسمحي باستخدام الميكروفون. غيّري الإذن ثم حاولي مجددًا.',
+  statusNoMic:'لا يتوفر التعرف على الكلام هنا. يمكنكِ كتابة رسالتكِ.',statusTranscribing:'جارٍ تحويل التسجيل إلى نص…',statusThinking:'جارٍ معالجة رسالتكِ…',
+  statusTtsUnavailable:'الصوت من الخادم غير متاح',ttsHttpFailure:'تعذّر توليد الصوت من الخادم (رمز الاستجابة {code})',ttsNetworkFailure:'تعذّر الاتصال بخدمة الصوت على الخادم',
+  statusBrowserVoiceUnavailable:'تعذّر تشغيل الصوت في هذا المتصفح.',statusServerError:'تعذّر الاتصال بالخادم',
+  statusPhotoError:'تعذّر تحليل الصورة',statusPhotoNeedsMessage:'أرسلي وصفًا للمنتج قبل إضافة الصورة.',statusPhotoReady:'تم إرسال الصورة للتحليل.',statusCopied:'تم نسخ الرابط.',statusCopyError:'تعذّر نسخ الرابط.',
+  statusShareUnavailable:'المشاركة غير متاحة؛ يمكنكِ نسخ الرابط.',statusQrUnavailable:'تعذّر إنشاء رمز QR، لكن الرابط ما زال متاحًا.',
+  statusCertError:'تعذّر إصدار الشهادة',statusMicRetry:'تحققي من إذن الميكروفون ثم اضغطي على زر التحدث للمحاولة مجددًا.',
+  statusVoiceTest:'جارٍ اختبار الصوت…',statusVoiceTestDone:'انتهى اختبار الصوت.',statusReadyToShare:'الشهادة جاهزة للمشاركة.',
+  examples:['أنتج زيت زيتون من محصول هذا الموسم.','لديّ تمر من الواحة وأريد بيعه.','أحضّر عسلًا من خلايا النحل في المزرعة.','أصنع هريسة من فلفل الحقل.','حصدت تينًا وأريد تقدير قيمته.','أستخرج زيت إكليل الجبل العطري.'],
+  summaryTitle:'ملخص ما فهمه المساعد',emptySummary:'ستظهر التفاصيل التي يرسلها الخادم هنا.',
+  workTitle:'تحققي من العمل ثم أصدري الشهادة',workNote:'أضيفي صورة للمنتج إذا أردتِ أن يساعد الخادم في التحقق من تفاصيله.',
+  photoLabel:'اختاري صورة للمنتج',choosePhoto:'اختيار صورة',samplePhoto:'صورة تجريبية',issueCertificate:'إصدار شهادة',certificateTitle:'شهادة المنتج',certificateBack:'رابط التحقق',certificateBackNote:'يمكن للمشتري فتح الرابط والتحقق من الشهادة.',
+  qrTitle:'رمز QR ورابط الشهادة',qrLoading:'جارٍ تجهيز رمز QR…',flipCard:'قلب الشهادة',tamper:'اختبار سلامة التوقيع',
+  copyLink:'نسخ الرابط',shareLink:'مشاركة',openLink:'فتح',downloadQr:'تنزيل QR (SVG)',
+  localWarning:'هذا الرابط يفتح فقط على الأجهزة المتصلة بشبكة Wi-Fi نفسها. انشري التطبيق على الإنترنت لمشاركته مع المشترين.',
+  mic:'بدء التحدث',stopMic:'إيقاف التحدث',send:'إرسال',messagePlaceholder:'اكتبي رسالتكِ هنا…',voiceReplies:'تشغيل الردود الصوتية',
+  conversationMode:'وضع المحادثة المستمرة',stopSpeaking:'إيقاف الصوت',speed:'سرعة الصوت',testVoice:'اختبار الصوت',
+  voiceTestText:'مرحبا بيك، هاذي تجربة للصوت.',retry:'إعادة المحاولة',stateIdle:'المزارعة مستعدة للمساعدة.',
+  stateGreeting:'المزارعة ترحب بكِ.',stateListening:'المزارعة تستمع إليكِ.',stateThinking:'المزارعة تنتظر رد الخادم.',
+  stateSpeaking:'المزارعة تتحدث.',stateBusy:'المزارعة تعمل على طلبكِ.',noAnswer:'لم يرسل الخادم ردًا نصيًا.',
+  labels:{product:'المنتوج',quantity:'الكمية',unit:'الوحدة',price_tnd:'السعر المذكور',maker_name:'الاسم',village:'المنطقة',days:'الأيام',hours:'الساعات',notes:'تفاصيل',verification:'حالة السجل',id:'المعرّف',vision:'وصف الصورة',source:'المصدر',variety:'النوعية',harvest_date:'تاريخ الجني',quality:'الجودة'},
+  backendVoice:'صوت الخادم',backendSpeech:'التعرّف على الكلام من الخادم',browserInput:'إدخال صوتي من المتصفح',browserVoice:'صوت المتصفح',enabled:'متاح',disabled:'غير متاح',
+  currencies:{TND:'دينار تونسي',USD:'دولار أمريكي',EUR:'يورو'}
+ },
+ fr:{
+  brand:'Dafter',tagline:'Votre alliée à la ferme, du champ au marché.',language:'Langue',theme:'Changer le thème',
+  conversationTitle:'Parlez de votre récolte ou produit',statusConnecting:'Connexion à l’assistant…',statusOffline:'Serveur indisponible ; vous pouvez réessayer.',
+  statusReady:'Assistant prêt',statusListening:'Je vous écoute… Touchez pour arrêter.',statusPermission:'Accès au micro refusé. Autorisez-le puis réessayez.',
+  statusNoMic:'La reconnaissance vocale est indisponible. Vous pouvez écrire.',statusTranscribing:'Transcription de l’enregistrement…',statusThinking:'Traitement de votre message…',
+  statusTtsUnavailable:'La voix du serveur est indisponible',ttsHttpFailure:'La voix du serveur a échoué (code {code})',ttsNetworkFailure:'Impossible de joindre le service vocal du serveur',
+  statusBrowserVoiceUnavailable:'Impossible de lire la voix sur ce navigateur.',statusServerError:'Impossible de joindre le serveur',
+  statusPhotoError:'Impossible d’analyser la photo',statusPhotoNeedsMessage:'Décrivez le produit avant d’ajouter une photo.',statusPhotoReady:'Photo envoyée pour analyse.',statusCopied:'Lien copié.',statusCopyError:'Impossible de copier le lien.',
+  statusShareUnavailable:'Partage indisponible ; vous pouvez copier le lien.',statusQrUnavailable:'Impossible de créer le QR, mais le lien reste disponible.',
+  statusCertError:'Impossible de créer le certificat',statusMicRetry:'Vérifiez l’autorisation du micro puis touchez le micro pour réessayer.',
+  statusVoiceTest:'Test de la voix…',statusVoiceTestDone:'Test vocal terminé.',statusReadyToShare:'Certificat prêt à partager.',
+  examples:['Je produis de l’huile d’olive cette saison.','J’ai des dattes de l’oasis à vendre.','Je récolte du miel dans ma ferme.','Je prépare de la harissa avec mes piments.','J’ai récolté des figues.','J’extrais de l’huile essentielle de romarin.'],
+  summaryTitle:'Résumé compris par l’assistant',emptySummary:'Les détails envoyés par le serveur apparaîtront ici.',
+  workTitle:'Vérifiez le travail puis créez le certificat',workNote:'Ajoutez une photo du produit si vous souhaitez que le serveur aide à vérifier ses détails.',
+  photoLabel:'Choisir une photo du produit',choosePhoto:'Choisir une photo',samplePhoto:'Photo exemple',issueCertificate:'Créer un certificat',certificateTitle:'Certificat du produit',certificateBack:'Lien de vérification',certificateBackNote:'L’acheteur peut ouvrir le lien et vérifier le certificat.',
+  qrTitle:'QR et lien du certificat',qrLoading:'Création du QR…',flipCard:'Retourner le certificat',tamper:'Tester la signature',
+  copyLink:'Copier le lien',shareLink:'Partager',openLink:'Ouvrir',downloadQr:'Télécharger QR (SVG)',
+  localWarning:'Ce lien ne fonctionne que sur les appareils connectés au même Wi-Fi. Publiez l’application en ligne pour le partager avec les acheteurs.',
+  mic:'Commencer à parler',stopMic:'Arrêter la parole',send:'Envoyer',messagePlaceholder:'Écrivez votre message…',voiceReplies:'Activer les réponses vocales',
+  conversationMode:'Mode conversation continue',stopSpeaking:'Arrêter la voix',speed:'Vitesse vocale',testVoice:'Tester la voix',
+  voiceTestText:'مرحبا بيك، هاذي تجربة للصوت.',retry:'Réessayer',stateIdle:'La fermière est prête à aider.',
+  stateGreeting:'La fermière vous salue.',stateListening:'La fermière vous écoute.',stateThinking:'La fermière attend la réponse du serveur.',
+  stateSpeaking:'La fermière parle.',stateBusy:'La fermière traite votre demande.',noAnswer:'Le serveur n’a pas envoyé de réponse texte.',
+  labels:{product:'Produit',quantity:'Quantité',unit:'Unité',price_tnd:'Prix déclaré',maker_name:'Nom',village:'Région',days:'Jours',hours:'Heures',notes:'Détails',verification:'État du dossier',id:'Identifiant',vision:'Description de la photo',source:'Source',variety:'Variété',harvest_date:'Date de récolte',quality:'Qualité'},
+  backendVoice:'Voix du serveur',backendSpeech:'Reconnaissance vocale serveur',browserInput:'Entrée vocale du navigateur',browserVoice:'Voix du navigateur',enabled:'disponible',disabled:'indisponible',
+  currencies:{TND:'dinars tunisiens',USD:'dollars américains',EUR:'euros'}
+ },
+ en:{
+  brand:'Dafter',tagline:'Your farm companion, from field to market.',language:'Language',theme:'Change theme',
+  conversationTitle:'Tell me about your harvest or product',statusConnecting:'Connecting to the assistant…',statusOffline:'Server unavailable; you can retry.',
+  statusReady:'Assistant ready',statusListening:'Listening… Tap to stop.',statusPermission:'Microphone permission denied. Allow access and try again.',
+  statusNoMic:'Speech recognition is unavailable. You can type instead.',statusTranscribing:'Transcribing your recording…',statusThinking:'Processing your message…',
+  statusTtsUnavailable:'Server voice is unavailable',ttsHttpFailure:'Server voice generation failed (response {code})',ttsNetworkFailure:'Could not reach the server voice service',
+  statusBrowserVoiceUnavailable:'This browser could not play speech.',statusServerError:'Could not reach the server',
+  statusPhotoError:'Could not analyse the photo',statusPhotoNeedsMessage:'Describe a product before adding a photo.',statusPhotoReady:'Photo sent for analysis.',statusCopied:'Link copied.',statusCopyError:'Could not copy the link.',
+  statusShareUnavailable:'Sharing is unavailable; you can copy the link.',statusQrUnavailable:'Could not generate the QR, but the link is still available.',
+  statusCertError:'Could not issue the certificate',statusMicRetry:'Check microphone permission, then tap the microphone to retry.',
+  statusVoiceTest:'Testing voice…',statusVoiceTestDone:'Voice test finished.',statusReadyToShare:'Certificate ready to share.',
+  examples:['I produce olive oil from this season’s harvest.','I have oasis dates to sell.','I harvest honey at my farm.','I make harissa from my peppers.','I harvested figs.','I extract rosemary essential oil.'],
+  summaryTitle:'What the assistant understood',emptySummary:'Details returned by the server will appear here.',
+  workTitle:'Review the work and issue a certificate',workNote:'Add a product photo if you want the server to help verify its details.',
+  photoLabel:'Choose a product photo',choosePhoto:'Choose photo',samplePhoto:'Sample photo',issueCertificate:'Issue certificate',certificateTitle:'Product certificate',certificateBack:'Verification link',certificateBackNote:'A buyer can open the link and verify the certificate.',
+  qrTitle:'QR code and certificate link',qrLoading:'Preparing QR code…',flipCard:'Flip certificate',tamper:'Test signature integrity',
+  copyLink:'Copy link',shareLink:'Share',openLink:'Open',downloadQr:'Download QR (SVG)',
+  localWarning:'This link only opens on devices on the same Wi-Fi. Publish the app online to share it with buyers.',
+  mic:'Start speaking',stopMic:'Stop speaking',send:'Send',messagePlaceholder:'Write your message…',voiceReplies:'Voice replies',
+  conversationMode:'Hands-free conversation mode',stopSpeaking:'Stop audio',speed:'Speech speed',testVoice:'Test voice',
+  voiceTestText:'مرحبا بيك، هاذي تجربة للصوت.',retry:'Retry',stateIdle:'The farmer is ready to help.',
+  stateGreeting:'The farmer is greeting you.',stateListening:'The farmer is listening.',stateThinking:'The farmer is waiting for the server.',
+  stateSpeaking:'The farmer is speaking.',stateBusy:'The farmer is working on your request.',noAnswer:'The server did not send a text reply.',
+  labels:{product:'Product',quantity:'Quantity',unit:'Unit',price_tnd:'Reported price',maker_name:'Name',village:'Region',days:'Days',hours:'Hours',notes:'Details',verification:'Record status',id:'ID',vision:'Photo description',source:'Source',variety:'Variety',harvest_date:'Harvest date',quality:'Quality'},
+  backendVoice:'Server voice',backendSpeech:'Server speech recognition',browserInput:'Browser voice input',browserVoice:'Browser voice',enabled:'available',disabled:'unavailable',
+  currencies:{TND:'Tunisian dinars',USD:'US dollars',EUR:'euros'}
+ }
+};
+const $=id=>document.getElementById(id),RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const layerFallbacks={
+ sky:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700"><defs><linearGradient id="s" x2="0" y2="1"><stop stop-color="#df9c7d"/><stop offset=".68" stop-color="#f2c68d"/><stop offset="1" stop-color="#f5d9a9"/></linearGradient></defs><path fill="url(#s)" d="M0 0h1200v700H0z"/><g fill="#fff0d6" opacity=".38"><ellipse cx="220" cy="150" rx="150" ry="26"/><ellipse cx="700" cy="210" rx="200" ry="30"/><ellipse cx="1020" cy="115" rx="130" ry="22"/></g></svg>',
+ far:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500"><path fill="#9e8a61" d="M0 250 120 195 230 180 340 226 480 165 620 215 760 145 890 197 1030 130 1200 180v320H0z"/><path fill="#a69a6d" opacity=".6" d="m0 276 155-55 145 42 160-60 190 44 175-66 190 46 185-30v303H0z"/></svg>',
+ mid:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 450"><path fill="#78814e" d="m0 150 145-60 150 48 170-75 180 60 160-82 190 56 205-64v417H0z"/><path fill="#a98a4e" d="m0 235 220-82 170 70 210-95 198 65 210-81 192 44v294H0z"/><g fill="#596b43"><circle cx="165" cy="130" r="37"/><circle cx="210" cy="118" r="29"/><circle cx="745" cy="115" r="36"/><circle cx="790" cy="102" r="29"/><circle cx="1055" cy="120" r="40"/></g><g stroke="#68472d" stroke-width="11"><path d="M165 160v57m580-66v58m310-54v60"/></g><g><path fill="#f1e3c9" d="m864 178 42-38 44 38v40h-86z"/><path fill="#a75b3e" d="m856 179 50-47 52 47-6 7-46-39-45 39z"/><path fill="#4e7781" d="M898 187h17v31h-17z"/><path fill="#a87544" d="M873 187h13v13h-13zm35-36h13v13h-13z"/></g></svg>',
+ near:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 370"><path fill="#cba04f" d="M0 75 170 34l180 40 170-58 210 56 180-45 290 44v299H0z"/><path fill="#b47d3e" d="m0 168 210-65 200 44 230-69 175 68 200-65 185 40v279H0z"/><path fill="none" stroke="#e1bd6e" stroke-width="8" opacity=".75" d="M0 245q260-120 490-20t710-13M0 300q230-95 470-5t730-10"/></svg>',
+ fore:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 210"><path fill="#7c5938" d="M0 90q175-80 325 5t320-12q180-80 350 10t205-9v126H0z"/><path fill="none" stroke="#d9b560" stroke-width="7" d="M40 210 115 30m25 180 28-113m165 113 42-166m108 166 32-103m212 103 34-141m180 141 26-101m122 101 47-176M10 180l-8-94m578 124 11-95m228 95 5-115"/></svg>'
+};
+const exampleLayers=['sky','far','mid','near','fore'];
+const stateKeys={idle:'stateIdle',greeting:'stateGreeting',listening:'stateListening',thinking:'stateThinking',speaking:'stateSpeaking',busy:'stateBusy'};
+let lang='ar',backend={stt:false,tts:false},pieceId=null,busy=false,voiceOn=true,handsFree=false,recording=null,recognizer=null,activeAudioUrl=null,currentCertificateUrl='',currentQrSvg='',speakingUtterance=null,analyser=null,audioContext=null,sourceNode=null,animFrame=0,finishPlayback=null,voiceStopped=false,greetingStarted=false,cancelRecording=false,knownLocation='',recordingStartedAt=0,recordingTimer=null,lastStatus={key:'statusConnecting',kind:'info',detail:''};
+const player=new Audio(),silentAudio='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+function t(key){return i18n[lang][key]??i18n.en[key]??key}
+function setStatus(key,kind='info',detail=''){lastStatus={key,kind,detail};const node=$('backend-status'),message=detail?`${t(key)}: ${detail}`:t(key);$('backend-status-text').textContent=message;node.dataset.kind=kind;$('status-area').textContent=message}
+function updateMicButton(active){$('mic').classList.toggle('is-active',active);$('mic').setAttribute('aria-label',t(active?'stopMic':'mic'))}
+function setState(state){const char=$('farmer');char.classList.remove(...Object.keys(stateKeys).map(k=>`state-${k}`));char.classList.add(`state-${state}`);$('farmer-state').textContent=t(stateKeys[state]||'stateIdle')}
+function localizedNumber(value){if(typeof value!=='number'||!Number.isFinite(value))return String(value);try{return new Intl.NumberFormat(lang==='ar'?'ar-TN':lang).format(value)}catch{return String(value)}}
+function labelFor(key){return i18n[lang].labels[key]||String(key).replace(/([a-z])([A-Z])/g,'$1 $2').replace(/[_-]+/g,' ').replace(/^./,c=>c.toUpperCase())}
+function formatValue(value){if(value===null||value===undefined)return '';if(typeof value==='number')return localizedNumber(value);if(Array.isArray(value))return value.map(formatValue).join('، ');if(typeof value==='object')return JSON.stringify(value);return String(value)}
+function adaptResponse(raw){
+ const source=raw&&typeof raw==='object'?raw:{},fields=[];
+ if(Array.isArray(source.fields))source.fields.forEach(item=>{if(item&&typeof item==='object'&&'key'in item)fields.push({key:String(item.key),value:item.value})});
+ else{
+  const record=source.piece&&typeof source.piece==='object'?source.piece:{};
+  Object.entries(record).forEach(([key,value])=>{if(value!==undefined&&value!==null)fields.push({key,value})});
+ }
+ const controlKeys=['piece','fields','missing','question','reply','reply_speech','reply_ar','price','canIssue','can_issue'];
+ Object.entries(source).forEach(([key,value])=>{if(!controlKeys.includes(key)&&value!==undefined&&value!==null&&!fields.some(field=>field.key===key))fields.push({key,value})});
+ const p=source.price&&typeof source.price==='object'?source.price:null;
+ let amount=null,currency='TND',note='';
+ if(p){amount=p.amount??p.price_floor_tnd??null;currency=p.currency??currency;note=p.note??'';if(!note&&p.price_floor_tnd!=null){const parts=[];if(p.suggested_ask_tnd!=null)parts.push(`${labelFor('suggested_ask_tnd')}: ${formatValue(p.suggested_ask_tnd)}`);if(p.materials_tnd!=null)parts.push(`${labelFor('materials_tnd')}: ${formatValue(p.materials_tnd)}`);if(p.labour_tnd!=null)parts.push(`${labelFor('labour_tnd')}: ${formatValue(p.labour_tnd)}`);if(p.billable_hours!=null)parts.push(`${labelFor('billable_hours')}: ${formatValue(p.billable_hours)}`);note=parts.join(' · ')}}
+ const canIssue=typeof source.canIssue==='boolean'?source.canIssue:typeof source.can_issue==='boolean'?source.can_issue:Array.isArray(source.missing)?source.missing.length===0:!!source.token;
+ return{fields,question:source.question??null,reply:source.reply??source.reply_speech??source.reply_ar??'',price:amount==null?null:{amount,currency,note},canIssue,photoPrompt:source.photoPrompt===true};
+}
+async function api(path,options){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),90000);let response;try{response=await fetch(path,{...options,signal:controller.signal})}catch(error){if(error.name==='AbortError')throw new Error('انتهت مهلة الاتصال. عاودي المحاولة.');throw error}finally{clearTimeout(timer)}if(!response.ok){let detail='';try{const body=await response.json();detail=body.error_ar||body.detail?.ar||body.detail||body.message||'';if(typeof detail==='object')detail=JSON.stringify(detail)}catch{}throw new Error(detail||`HTTP ${response.status}`)}return response}
+function applyLanguage(){
+ const copy=i18n[lang];document.documentElement.lang=lang;queueMicrotask(()=>typeof refreshSttLabels==='function'&&refreshSttLabels());document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title=copy.brand;
+ $('brand').textContent=copy.brand;$('hero-heading').textContent=copy.brand;$('tagline').textContent=copy.tagline;
+ $('language-label').textContent=copy.language;$('theme-toggle').setAttribute('aria-label',copy.theme);
+ $('retry-mic').textContent=copy.retry;
+ $('conversation-title').textContent=copy.conversationTitle;$('summary-title').textContent=copy.summaryTitle;
+ $('work-title').textContent=copy.workTitle;$('work-note').textContent=copy.workNote;
+ $('photo-button-label').textContent=copy.choosePhoto;$('photo-picker').setAttribute('aria-label',copy.photoLabel);$('issue').textContent=copy.issueCertificate;
+ $('cert-front-title').textContent=copy.certificateTitle;$('cert-back-title').textContent=copy.certificateBack;$('cert-back-note').textContent=copy.certificateBackNote;
+ $('flip-button').textContent=copy.flipCard;$('tamper').textContent=copy.tamper;$('qr-title').textContent=copy.qrTitle;
+ $('qr-placeholder').textContent=copy.qrLoading;$('local-warning').textContent=copy.localWarning;
+ $('copy-link').textContent=copy.copyLink;$('share-link').textContent=copy.shareLink;$('open-link').textContent=copy.openLink;$('download-qr').textContent=copy.downloadQr;
+ $('voice-toggle-label').textContent=copy.voiceReplies;$('conversation-toggle-label').textContent=copy.conversationMode;$('stop-speaking').textContent=copy.stopSpeaking;
+ $('speed-label').textContent=copy.speed;$('test-voice').textContent=copy.testVoice;$('message').placeholder=copy.messagePlaceholder;
+ $('message').setAttribute('aria-label',copy.messagePlaceholder);$('send').textContent=copy.send;updateMicButton(Boolean(recording||recognizer));$('examples').setAttribute('aria-label',copy.conversationTitle);
+ $('language').value=lang;renderFields();renderExamples();setStatus(lastStatus.key,lastStatus.kind,lastStatus.detail);
+}
+const HIDDEN_FIELD_KEYS=new Set(['photoPrompt','photoVerified','verification','photo','photo_prompted','photo_prompt','photo_verified','id','created','complexity','vision','degraded','reason','photo_prompt','transcripts','awaiting_field','intent','token','llm','source']);
+function renderFields(){
+ const fields=(window.lastAdapted?.fields||[]).filter(({key})=>!HIDDEN_FIELD_KEYS.has(key));$('fields').replaceChildren();
+ if(!fields.length){const empty=document.createElement('p');empty.className='subtle';empty.textContent=t('emptySummary');$('fields').append(empty)}
+ fields.forEach(({key,value})=>{const row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');row.className='field-row';dt.textContent=labelFor(key);dd.textContent=key==='unit'?unitLabel(value):formatValue(value);$('fields').append(row);row.append(dt,dd)});
+ const price=window.lastAdapted?.price,box=$('price-box');box.hidden=!price;
+ if(price){$('price-amount').textContent=price.amount==null?'':`${formatValue(price.amount)} ${i18n[lang].currencies[price.currency]||price.currency}`;$('price-note').textContent=price.note||''}
+ renderResume(fields,price);
+ $('issue').disabled=!pieceId||!window.lastAdapted?.canIssue;
+}
+function renderResume(fields,price){
+ const product=fields.find(field=>field.key==='product')?.value,quantity=fields.find(field=>field.key==='quantity')?.value,unit=fields.find(field=>field.key==='unit')?.value;
+ $('resume-card').hidden=!fields.length;$('resume-fields').replaceChildren();
+ const lines=[['المنتوج',product],['الكمية',quantity!=null?`${formatValue(quantity)} ${unitLabel(unit||'')}`:null],['المكان',fields.find(field=>field.key==='village')?.value],['السوم',price?.amount!=null?`${formatValue(price.amount)} دينار`:'ما فماش تقدير سوق موثوق']];
+ lines.filter(([,value])=>value).forEach(([label,value])=>{const line=document.createElement('p');line.className='resume-line';line.textContent=`${label}: ${value}`;$('resume-fields').append(line)});
+ const crates=$('crates');crates.replaceChildren();if(unit==='crate'&&Number(quantity)>0){for(let i=0;i<Math.min(5,Math.ceil(Number(quantity)));i++){const crate=document.createElement('span');crate.className='crate';crate.textContent=product||'خضرة';crate.style.setProperty('--fill','80%');crates.append(crate)}}
+}
+function unitLabel(value){return ({crate:'قاجوة',basket:'قفة',piece:'حبة',kg:'كيلو',quintal:'قنطار',ton:'طن',litre:'لتر',box:'صندوق',bottle:'قارورة'})[value]||formatValue(value)}
+function renderExamples(items=null){
+ const target=$('examples');target.replaceChildren();const examples=items||i18n[lang].examples;
+ examples.forEach(item=>{const text=typeof item==='string'?item:(item?.[lang]??item?.text??item?.label??'');if(!text)return;const button=document.createElement('button');button.type='button';button.className='alt';button.textContent=text;button.addEventListener('click',()=>{$('message').value=text;$('message').focus()});target.append(button)});
+}
+async function loadExamples(){
+ try{
+  const schemaResponse=await fetch('/openapi.json');if(!schemaResponse.ok)return;const schema=await schemaResponse.json();
+  if(!schema.paths?.['/api/examples']?.get)return;
+  const response=await fetch('/api/examples');if(!response.ok)return;const data=await response.json();
+  const entries=Array.isArray(data)?data:Array.isArray(data.examples)?data.examples:null;if(entries?.length)renderExamples(entries)
+ }catch{}
+}
+function updateResponse(raw){
+ const adapted=adaptResponse(raw);window.lastAdapted=adapted;pieceId=raw?.piece?.id??raw?.piece_id??pieceId;renderFields();
+ $('question-line').textContent=adapted.question||'';return adapted;
+}
+function appendBubble(text,kind){
+ const bubble=document.createElement('div'),caption=document.createElement('span');bubble.className=`bubble ${kind}`;caption.className='caption';caption.textContent=text;bubble.append(caption);$('chat').append(bubble);$('chat').scrollTop=$('chat').scrollHeight;return{bubble,caption};
+}
+function typeCaption(caption,text,duration){
+ if(RM){caption.textContent=text;return Promise.resolve()}
+ const chars=Array.from(text);if(!chars.length){caption.textContent='';return Promise.resolve()}
+ caption.textContent='';let i=0;const step=Math.max(15,duration/chars.length);
+ return new Promise(resolve=>{const timer=setInterval(()=>{i=Math.min(chars.length,i+Math.max(1,Math.ceil(chars.length/60)));caption.textContent=chars.slice(0,i).join('');$('chat').scrollTop=$('chat').scrollHeight;if(i>=chars.length){clearInterval(timer);resolve()}},step)});
+}
+function ensureAudioGraph(){
+ if(analyser||!player.src)return analyser;
+ try{audioContext=audioContext||new(window.AudioContext||window.webkitAudioContext)();sourceNode=sourceNode||audioContext.createMediaElementSource(player);analyser=audioContext.createAnalyser();analyser.fftSize=64;sourceNode.connect(analyser);analyser.connect(audioContext.destination);return analyser}catch{return null}
+}
+function animateSpeaking(){
+ if(RM||document.hidden)return;
+ if(analyser){const data=new Uint8Array(analyser.frequencyBinCount);analyser.getByteFrequencyData(data);const avg=data.reduce((a,b)=>a+b,0)/data.length/255;$('farmer').style.setProperty('--voice-level',String(.85+avg*.35))}
+ else $('farmer').style.setProperty('--voice-level',String(.9+Math.random()*.2));
+ animFrame=requestAnimationFrame(animateSpeaking);
+}
+function stopVoice(){
+ voiceStopped=true;if(animFrame)cancelAnimationFrame(animFrame);animFrame=0;player.pause();player.currentTime=0;if(finishPlayback){finishPlayback();finishPlayback=null}
+ if(speakingUtterance){try{speechSynthesis.cancel()}catch{}speakingUtterance=null}
+ if(activeAudioUrl){URL.revokeObjectURL(activeAudioUrl);activeAudioUrl=null}
+ $('farmer').style.removeProperty('--voice-level');setState('idle');
+}
+function unlockAudio(){
+ if(!player.src||player.src===silentAudio){player.src=silentAudio;player.volume=0;const attempt=player.play();if(attempt?.then)attempt.then(()=>{player.pause();player.currentTime=0;player.volume=1}).catch(()=>{player.volume=1})}
+ if(audioContext?.state==='suspended')audioContext.resume().catch(()=>{});
+}
+async function playServerVoice(text){
+ const response=await api('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,rate:Number($('speed').value)})}),blob=await response.blob();
+ if(!blob.size)throw new Error('Empty audio response');
+ if(activeAudioUrl)URL.revokeObjectURL(activeAudioUrl);activeAudioUrl=URL.createObjectURL(blob);player.src=activeAudioUrl;player.playbackRate=Number($('speed').value);ensureAudioGraph();if(audioContext?.state==='suspended')await audioContext.resume();
+ const ended=new Promise((resolve,reject)=>{const done=()=>{finishPlayback=null;resolve()},fail=()=>{finishPlayback=null;reject(new Error('Audio playback failed'))};finishPlayback=done;player.addEventListener('ended',done,{once:true});player.addEventListener('error',fail,{once:true})});
+ try{await player.play();requestAnimationFrame(animateSpeaking);await ended}catch(error){finishPlayback=null;throw error}
+}
+function playBrowserVoice(text){
+ return new Promise((resolve,reject)=>{
+  if(!('speechSynthesis'in window)||!window.SpeechSynthesisUtterance){reject(new Error('Speech synthesis unavailable'));return}
+  const utterance=new SpeechSynthesisUtterance(text),voices=speechSynthesis.getVoices(),selected=$('voice-picker').value;
+  const voice=voices.find(item=>item.name===selected)||voices.find(item=>item.lang.toLowerCase()==='ar-tn')||voices.find(item=>item.lang.toLowerCase().startsWith('ar'));
+  utterance.lang=voice?.lang||'ar-TN';if(voice)utterance.voice=voice;utterance.rate=Number($('speed').value);
+  utterance.onend=()=>{speakingUtterance=null;resolve()};utterance.onerror=event=>{speakingUtterance=null;if(voiceStopped)resolve();else reject(new Error(event.error||'Speech synthesis failed'))};
+  speakingUtterance=utterance;speechSynthesis.cancel();speechSynthesis.speak(utterance);requestAnimationFrame(animateSpeaking);
+ });
+}
+function setTtsFallbackNotice(active,reason=''){document.body.dataset.ttsFallback=active?'1':'';if(active&&reason)console.info('Dafter: using browser voice —',reason)}
+async function speakReply(text,{test=false}={}){
+ if(!text)return;
+ voiceStopped=false;
+ const output=test?null:appendBubble(text,'bot');if(output)output.bubble.classList.add('pending');setState('speaking');
+ const typing=output?typeCaption(output.caption,text,Math.max(700,text.length*38)):Promise.resolve();
+ if(!voiceOn&&!test){await typing;if(output)output.bubble.classList.remove('pending');setState('idle');setStatus('statusReady','ready');if(handsFree)setTimeout(startListening,350);return}
+ let serverTtsError='';
+ try{
+  if(backend.tts){await playServerVoice(text);setTtsFallbackNotice(false);}
+  else throw new Error('Server TTS is not enabled; using browser speech synthesis.');
+ }catch(error){
+  serverTtsError=error.message||t('ttsNetworkFailure');
+  setTtsFallbackNotice(true, serverTtsError);
+  try{await playBrowserVoice(text)}catch(browserError){await typing;setStatus('statusBrowserVoiceUnavailable','error',browserError.message||serverTtsError||t('statusTtsUnavailable'))}
+ }
+ await typing;if(output)output.bubble.classList.remove('pending'); if(speakingUtterance===null)setStatus(test?'statusVoiceTestDone':'statusReady','ready',serverTtsError?'استُخدم صوت المتصفح':'');
+ if(!test)setState('idle');if(handsFree&&!test)setTimeout(startListening,400);
+}
+async function unlockOnGesture(){unlockAudio();document.removeEventListener('pointerdown',unlockOnGesture);document.removeEventListener('keydown',unlockOnGesture)}
+function populateVoices(){
+ if(!('speechSynthesis' in window))return;
+ const picker=$('voice-picker'),selected=localStorage.getItem('dafterVoice')||picker.value,voices=speechSynthesis.getVoices();
+ picker.replaceChildren(new Option('تلقائي',''));
+ voices.forEach(voice=>picker.add(new Option(`${voice.name} (${voice.lang})`,voice.name)));
+ if([...picker.options].some(option=>option.value===selected))picker.value=selected;
+}
+if('speechSynthesis' in window){speechSynthesis.addEventListener?.('voiceschanged',populateVoices);populateVoices()}
+function startGreeting(){
+ if(greetingStarted)return;greetingStarted=true;unlockAudio();$('start-button').hidden=true;
+ speakReply('عسلامة و مرحبا بيكم في دفتر، دفتر باش يعاونكم تبيعو سلعتكم بالسوم اللي تحبو عليه.');
+ requestLocation();
+}
+function requestLocation(){
+ if(!navigator.geolocation)return;
+ navigator.geolocation.getCurrentPosition(async position=>{
+  try{const response=await api(`/api/location/reverse?lat=${encodeURIComponent(position.coords.latitude)}&lon=${encodeURIComponent(position.coords.longitude)}`),data=await response.json();knownLocation=data.location}
+  catch(error){setStatus('statusReady','ready',error.message)}
+ },()=>{}, {enableHighAccuracy:false,timeout:7000,maximumAge:600000});
+}
+document.addEventListener('pointerdown',unlockOnGesture,{once:true});document.addEventListener('keydown',unlockOnGesture,{once:true});
+document.getElementById('start-button').addEventListener('click',startGreeting);
+document.addEventListener('pointerdown',unlockOnGesture,{once:true});
+document.addEventListener('keydown',unlockOnGesture,{once:true});
+async function sendMessage(text=$('message').value.trim()){
+ if(!text||busy)return;
+ busy=true;$('send').disabled=true;$('message').value='';appendBubble(text,'user');setStatus('statusThinking','busy');setState('thinking');
+ try{
+  const response=await api('/api/log',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({transcript:text,piece_id:pieceId,location:knownLocation})}),data=await response.json(),adapted=updateResponse(data);
+  if(adapted.reply)await speakReply(adapted.reply);else{setState('idle');setStatus('statusReady','ready')}
+  if(adapted.photoPrompt)await speakReply('إذا تنجم تصوّرلي السلعة باش نعملك الشهادة (شهادة الجودة/العرض)، وكان فما معلومة ناقصة نسألك عليها قبل.');
+ }catch(error){setStatus('statusServerError','error',error.message);setState('idle')}
+ finally{busy=false;$('send').disabled=false}
+}
+$('send').addEventListener('click',()=>sendMessage());
+$('message').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}});
+function stopListening(cancel=false){
+ if(recording){const recorder=recording;recording=null;cancelRecording=cancel;if(recorder.state==='recording')recorder.stop()}
+ if(recognizer){const current=recognizer;if(cancel){current.onresult=null;current.onend=null}try{current.stop()}catch{}recognizer=null}
+ if(recordingTimer){clearInterval(recordingTimer);recordingTimer=null}
+ updateMicButton(false);setState('idle');
+}
+async function transcribeBlob(blob){
+ setStatus('statusTranscribing','busy');setState('thinking');
+ try{const form=new FormData();form.append('file',blob,'recording.webm');const response=await api('/api/transcribe',{method:'POST',body:form}),data=await response.json();if(data.transcript)await sendMessage(data.transcript);else setStatus('statusNoMic','error')}
+ catch(error){setStatus('statusServerError','error',error.message);setState('idle')}
+}
+const STT_TEXT={
+ ar:{sttLang:'لغة الكلام',auto:'تلقائي',statusNoSpeech:'ما سمعت شيء. قرّبي من الميكروفون وأعيدي، أو اختاري لغة الكلام.',statusSttNetwork:'خدمة التعرف على الكلام في المتصفح تحتاج الإنترنت. جرّبي Chrome أو Edge، أو اكتبي رسالتكِ.',statusSttUnsupported:'هذا المتصفح لا يدعم إدخال الصوت. افتحي التطبيق في Chrome أو Edge.',statusNoMicDevice:'ما لقيتش ميكروفون. تأكدي أنه موصول ومختار في Windows.',statusSttLang:'هذه اللغة غير مدعومة للتعرف على الكلام. اختاري لغة أخرى.'},
+ fr:{sttLang:'Langue parlée',auto:'Auto',statusNoSpeech:'Je n’ai rien entendu. Rapprochez-vous du micro ou choisissez la langue parlée.',statusSttNetwork:'La reconnaissance vocale du navigateur a besoin d’Internet. Essayez Chrome ou Edge, ou écrivez.',statusSttUnsupported:'Ce navigateur ne gère pas la saisie vocale. Ouvrez l’application dans Chrome ou Edge.',statusNoMicDevice:'Aucun micro détecté. Vérifiez qu’il est branché et sélectionné dans Windows.',statusSttLang:'Langue non prise en charge. Choisissez-en une autre.'},
+ en:{sttLang:'Speaking language',auto:'Auto',statusNoSpeech:'I didn’t hear anything. Move closer to the mic, or pick your speaking language.',statusSttNetwork:'Browser speech recognition needs internet. Try Chrome or Edge, or type instead.',statusSttUnsupported:'This browser has no voice input. Open the app in Chrome or Edge.',statusNoMicDevice:'No microphone found. Check it is plugged in and selected in Windows.',statusSttLang:'That language isn’t supported for speech recognition. Pick another one.'}
+};
+for(const code of Object.keys(STT_TEXT))if(i18n[code])Object.assign(i18n[code],STT_TEXT[code]);
+function sttLanguage(){
+ const chosen=$('stt-lang')?.value||'auto';
+ if(chosen!=='auto')return chosen;
+ return lang==='fr'?'fr-FR':lang==='en'?'en-US':'ar-TN';
+}
+try{const saved=localStorage.getItem('dafter-stt-lang');if(saved&&$('stt-lang'))$('stt-lang').value=saved}catch{}
+$('stt-lang')?.addEventListener('change',event=>{try{localStorage.setItem('dafter-stt-lang',event.target.value)}catch{}});
+function refreshSttLabels(){const label=$('stt-lang-label');if(label)label.textContent=t('sttLang');const auto=$('stt-lang')?.querySelector('option[value=auto]');if(auto)auto.textContent=t('auto');$('stt-lang')?.setAttribute('aria-label',t('sttLang'))}
+function startBrowserRecognition(){
+ const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!Recognition){setStatus('statusSttUnsupported','error');return}
+ try{
+  const rec=new Recognition();recognizer=rec;
+  rec.lang=sttLanguage();rec.interimResults=true;rec.continuous=true;rec.maxAlternatives=1;
+  let finalText='',heard=false,silenceTimer=null,failed=false;
+  const box=$('message'),before=box.value;
+  const armSilence=()=>{clearTimeout(silenceTimer);silenceTimer=setTimeout(()=>{try{rec.stop()}catch{}},1800)};
+  rec.onstart=()=>{updateMicButton(true);setStatus('statusListening','busy',rec.lang);setState('listening');silenceTimer=setTimeout(()=>{try{rec.stop()}catch{}},8000)};
+  rec.onresult=event=>{
+   heard=true;let interim='';
+   for(let i=event.resultIndex;i<event.results.length;i++){const piece=event.results[i][0].transcript;if(event.results[i].isFinal)finalText+=piece+' ';else interim+=piece}
+   box.value=(finalText+interim).trim();armSilence();
+  };
+  rec.onerror=event=>{
+   failed=true;clearTimeout(silenceTimer);box.value=before;
+   const map={'not-allowed':'statusPermission','service-not-allowed':'statusPermission','no-speech':'statusNoSpeech','audio-capture':'statusNoMicDevice','network':'statusSttNetwork','language-not-supported':'statusSttLang'};
+   const key=map[event.error]||'statusNoMic';setStatus(key,'error');
+   if(key==='statusPermission'||key==='statusNoSpeech')$('retry-mic').classList.add('visible');
+   setState('idle');
+  };
+  rec.onend=()=>{
+   clearTimeout(silenceTimer);if(recognizer===rec)recognizer=null;updateMicButton(Boolean(recording));
+   const text=(finalText||box.value).trim();
+   if(!failed&&heard&&text&&text!==before.trim()){box.value='';sendMessage(text);return}
+   if(!failed&&!heard){setStatus('statusNoSpeech','error');$('retry-mic').classList.add('visible')}
+   if(handsFree&&!busy&&!failed)setTimeout(startListening,350);else if(!busy)setState('idle');
+  };
+  rec.start();
+ }catch(error){setStatus('statusNoMic','error',error.message)}
+}
+async function startListening(){
+ if(busy)return;
+ if(recording||recognizer){stopListening();return}
+ $('retry-mic').classList.remove('visible');unlockAudio();
+ if(backend.stt&&navigator.mediaDevices?.getUserMedia&&window.MediaRecorder){
+  try{
+   const stream=await navigator.mediaDevices.getUserMedia({audio:true}),mime=MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':'audio/webm',recorder=new MediaRecorder(stream,{mimeType:mime}),chunks=[];
+   recording=recorder;recorder.ondataavailable=event=>{if(event.data.size)chunks.push(event.data)};
+   recorder.onerror=()=>{setStatus('statusServerError','error');setState('idle')};
+   recorder.onstop=()=>{stream.getTracks().forEach(track=>track.stop());if(recording===recorder)recording=null;if(recordingTimer){clearInterval(recordingTimer);recordingTimer=null}updateMicButton(Boolean(recognizer));const blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});if(blob.size&&!cancelRecording)transcribeBlob(blob);else setState('idle');cancelRecording=false};
+   recorder.start();recordingStartedAt=Date.now();updateMicButton(true);setStatus('statusListening','busy','00:00');setState('listening');
+   recordingTimer=setInterval(()=>{const elapsed=Math.floor((Date.now()-recordingStartedAt)/1000);setStatus('statusListening','busy',`${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(elapsed%60).padStart(2,'0')}`)},500);return;
+  }catch(error){if(error.name==='NotAllowedError'||error.name==='SecurityError'){setStatus('statusPermission','error');$('retry-mic').classList.add('visible');setState('idle');return}if(!window.SpeechRecognition&&!window.webkitSpeechRecognition){setStatus('statusNoMic','error');return}}
+ }
+ startBrowserRecognition();
+}
+$('mic').addEventListener('click',()=>{if(recording||recognizer){handsFree=false;$('conversation-toggle').checked=false;stopListening();setStatus('statusReady','ready')}else startListening()});
+$('retry-mic').addEventListener('click',startListening);
+$('voice-toggle').addEventListener('change',event=>{voiceOn=event.target.checked;if(!voiceOn)stopVoice()});
+$('conversation-toggle').addEventListener('change',event=>{handsFree=event.target.checked;if(!handsFree){stopListening();setStatus('statusReady','ready')}});
+$('stop-speaking').addEventListener('click',()=>{stopListening(true);stopVoice();setStatus('statusReady','ready')});
+$('speed').addEventListener('input',event=>{$('speed-value').value=`${Number(event.target.value).toFixed(1)}x`;player.playbackRate=Number(event.target.value)});
+$('voice-picker').addEventListener('change',event=>localStorage.setItem('dafterVoice',event.target.value));
+async function testVoice(){
+ if(!backend.tts){await speakReply(t('voiceTestText'),{test:true});setStatus('statusVoiceTestDone','ready','صوت المتصفح');return}
+ unlockAudio();setStatus('statusVoiceTest','busy');
+ let health=null,reason='';
+ try{const response=await api('/api/tts/health'),result=await response.json();health=result;if(!result.ok)reason=result.error?.ar||result.error_ar||result.hint||t('statusTtsUnavailable')}
+ catch(error){reason=error.message||t('ttsNetworkFailure')}
+ await speakReply(t('voiceTestText'),{test:true});
+ if(!health?.ok)setStatus('statusTtsUnavailable','error',reason||t('statusTtsUnavailable'));
+ else setStatus('statusVoiceTestDone','ready',`${health.voice} · ${health.bytes} bytes · ${health.ms} ms`);
+}
+$('test-voice').addEventListener('click',testVoice);
+async function uploadPhoto(blob,name){
+ if(!pieceId){setStatus('statusPhotoNeedsMessage','error');return}
+ try{const form=new FormData();form.append('file',blob,name);const response=await api(`/api/pieces/${encodeURIComponent(pieceId)}/photo`,{method:'POST',body:form}),data=await response.json(),adapted=updateResponse(data);setStatus('statusPhotoReady','ready');if(adapted.reply)await speakReply(adapted.reply)}
+ catch(error){setStatus('statusPhotoError','error',error.message)}
+}
+$('photo').addEventListener('change',event=>{const file=event.target.files?.[0];if(file){$('photo-name').textContent=file.name;uploadPhoto(file,file.name)}});
+$('gallery-photo').addEventListener('change',event=>{const file=event.target.files?.[0];if(file){$('photo-name').textContent=file.name;uploadPhoto(file,file.name)}});
+function isPrivateHost(host){
+ const h=host.toLowerCase().replace(/^\[|\]$/g,'');
+ return h==='localhost'||h==='::1'||h.endsWith('.localhost')||/^127(?:\.\d{1,3}){3}$/.test(h)||/^10(?:\.\d{1,3}){3}$/.test(h)||/^192\.168(?:\.\d{1,3}){2}$/.test(h)||/^172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}$/.test(h);
+}
+async function loadQrLibrary(){
+ if(window.qrcode)return window.qrcode;
+ await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';script.onload=resolve;script.onerror=()=>reject(new Error('QR library unavailable'));document.head.append(script)});
+ if(!window.qrcode)throw new Error('QR library unavailable');return window.qrcode;
+}
+async function generateQr(url,serverSvg){
+ if(serverSvg&&/<svg[\s>]/i.test(serverSvg))return serverSvg;
+ const qrcode=await loadQrLibrary(),qr=qrcode(0,'M');qr.addData(url);qr.make();return qr.createSvgTag(6,4);
+}
+function showQr(svg){
+ currentQrSvg=svg;const image=document.createElement('img');image.alt=t('qrTitle');const objectUrl=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));image.src=objectUrl;$('qr').replaceChildren(image);
+}
+function updateCertificateLink(url){
+ currentCertificateUrl=url;$('certificate-link').href=url;$('certificate-link').textContent=url;$('local-warning').classList.toggle('visible',isPrivateHost(new URL(url,location.href).hostname));
+}
+async function issueCertificate(){
+ if(!pieceId)return;
+ try{
+  const response=await api(`/api/pieces/${encodeURIComponent(pieceId)}/certificate`,{method:'POST'}),data=await response.json(),url=data.url||new URL(`/v/${data.token}`,location.href).href;
+  updateCertificateLink(url);$('certificate').classList.add('visible');$('flip').classList.remove('flipped');$('cert-summary').textContent=window.lastAdapted?.fields.map(({key,value})=>`${labelFor(key)}: ${formatValue(value)}`).slice(0,3).join(' · ')||t('certificateTitle');
+  $('qr-placeholder').textContent=t('qrLoading');try{showQr(await generateQr(url,data.qr_svg))}catch(error){$('qr').replaceChildren(Object.assign(document.createElement('span'),{className:'subtle',textContent:t('statusQrUnavailable')}));setStatus('statusQrUnavailable','error',error.message)}
+  setStatus('statusReadyToShare','ready');$('certificate').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});await speakReply('الشهادة جاهزة!');
+ }catch(error){setStatus('statusCertError','error',error.message)}
+}
+$('issue').addEventListener('click',issueCertificate);
+$('flip-button').addEventListener('click',()=>$('flip').classList.toggle('flipped'));
+$('tamper').addEventListener('click',()=>{if(!currentCertificateUrl)return;const url=new URL(currentCertificateUrl);const segments=url.pathname.split('/');const last=segments.pop()||'';segments.push(last.slice(0,-1)+(last.slice(-1)==='a'?'b':'a'));url.pathname=segments.join('/');updateCertificateLink(url.href);generateQr(url.href,'').then(showQr).catch(error=>setStatus('statusQrUnavailable','error',error.message))});
+$('copy-link').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(currentCertificateUrl);setStatus('statusCopied','ready')}catch(error){setStatus('statusCopyError','error',error.message)}});
+$('share-link').addEventListener('click',async()=>{if(!navigator.share){setStatus('statusShareUnavailable','error');return}try{await navigator.share({title:t('certificateTitle'),url:currentCertificateUrl})}catch(error){if(error.name!=='AbortError')setStatus('statusShareUnavailable','error',error.message)}});
+$('open-link').addEventListener('click',()=>{if(currentCertificateUrl)window.open(currentCertificateUrl,'_blank','noopener,noreferrer')});
+$('download-qr').addEventListener('click',()=>{if(!currentQrSvg)return;const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([currentQrSvg],{type:'image/svg+xml'}));link.download='dafter-certificate.svg';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000)});
+$('language').addEventListener('change',event=>{lang=event.target.value;applyLanguage();if(currentQrSvg)showQr(currentQrSvg)});
+$('theme-toggle').addEventListener('click',()=>{const current=document.documentElement.dataset.theme|| (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');themeOverride=current==='dark'?'light':'dark';document.documentElement.dataset.theme=themeOverride});
+function resizeForKeyboard(){
+ const viewport=window.visualViewport;if(!viewport)return;
+ const keyboard=Math.max(0,window.innerHeight-viewport.height-viewport.offsetTop);document.documentElement.style.setProperty('--kb-offset',`${keyboard}px`);
+}
+window.visualViewport?.addEventListener('resize',resizeForKeyboard);window.visualViewport?.addEventListener('scroll',resizeForKeyboard);
+function updateParallax(event){
+ if(RM||document.hidden)return;const x=event.clientX/innerWidth-.5,y=event.clientY/innerHeight-.5;
+ document.querySelectorAll('.farm-layer').forEach((layer,index)=>{const depth=index+1;layer.style.setProperty('--layer-x',`${-x*depth*5}px`);layer.style.setProperty('--layer-y',`${-y*depth*3}px`)});
+}
+addEventListener('pointermove',updateParallax,{passive:true});
+$('farmer').addEventListener('click',()=>{setState('greeting');setTimeout(()=>{if($('farmer').classList.contains('state-greeting'))setState('idle')},2500)});
+document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('paused',document.hidden);if(document.hidden){if(animFrame)cancelAnimationFrame(animFrame);animFrame=0}else if(!RM&&player&&!player.paused)requestAnimationFrame(animateSpeaking)});
+async function loadFarmLayers(){
+ if(!backend.staticLayers){exampleLayers.forEach(name=>{const layer=document.querySelector(`[data-layer="${name}"]`);layer.style.backgroundImage=`url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(layerFallbacks[name])}")`});return}
+ await Promise.all(exampleLayers.map(async name=>{
+  const layer=document.querySelector(`[data-layer="${name}"]`);if(!layer)return;
+  try{const response=await fetch(`/static/img/layer-${name}.webp`);if(response.ok){const blob=await response.blob(),url=URL.createObjectURL(blob);layer.style.backgroundImage=`url("${url}")`;return}}catch{}
+  if(name==='mid'){layer.style.backgroundImage='url("/static/img/tunisia-landscape.webp")';return}
+  const svg=layerFallbacks[name],url=`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;layer.style.backgroundImage=`url("${url}")`;
+ }));
+}
+async function initialize(){
+ applyLanguage();setStatus('statusConnecting','busy');setState('idle');
+ const hour=new Date().getHours(),period=hour<8?'dawn':hour<16?'noon':hour<19?'sunset':'night';document.querySelector('.farm-scene').dataset.period=period;
+ try{
+  const response=await api('/api/status'),status=await response.json();backend=status;
+  $('backend-status-text').textContent=`${t('statusReady')} · Qwen: ${status.ollama_available?t('enabled'):t('disabled')} · ${t('backendSpeech')}: ${status.stt?t('enabled'):t('browserInput')} · ${t('backendVoice')}: ${status.tts?t('enabled'):t('browserVoice')}`;
+  $('backend-status').dataset.kind='ready';$('status-area').textContent=$('backend-status-text').textContent;lastStatus={key:'statusReady',kind:'ready',detail:''};
+ }catch(error){setStatus('statusOffline','error',error.message)}
+ loadExamples();loadFarmLayers();
+}
+initialize();
+</script>
+</body>
+</html>

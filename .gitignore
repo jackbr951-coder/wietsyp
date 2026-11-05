@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.db
+.env
+node_modules/
+
+# local secrets and generated files
+.env.*
+!.env.example
+*.log
+*_status.txt
+
+# generated audio cache
+data/
